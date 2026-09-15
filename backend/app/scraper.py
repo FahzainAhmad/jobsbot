@@ -182,6 +182,22 @@ async def _fetch_via_browser(
     *,
     city: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
+    locations: List[Optional[str]]
+    if city:
+        locations = [city]
+    else:
+        locations = [
+            None,
+            "London",
+            "Manchester",
+            "Birmingham",
+            "Southampton",
+            "Glasgow",
+            "Belfast",
+            "Carlisle",
+            "Exeter",
+        ]
+
     captured: List[Dict[str, Any]] = []
 
     async with async_playwright() as playwright:
@@ -223,17 +239,26 @@ async def _fetch_via_browser(
             await _dismiss_chrome(page)
             await page.wait_for_timeout(2000)
 
-            # Initial geolocated search often returns national-ish Warehouse Operative cards.
-            # Then optionally refine with the requested city.
-            if city:
-                await _set_location(page, city)
-                await page.wait_for_timeout(3500)
-                await _expand_filters(page)
-                await page.wait_for_timeout(3500)
-            else:
-                # Nudge another search without locking to a tiny radius.
-                await _click_first(page, ["Close guided search", "Skip", "Close"])
-                await page.wait_for_timeout(2500)
+            for location in locations:
+                before = len(captured)
+                if location:
+                    await _set_location(page, location)
+                    await page.wait_for_timeout(3500)
+                    await _expand_filters(page)
+                    await page.wait_for_timeout(2500)
+                else:
+                    await _click_first(page, ["Close guided search", "Skip", "Close"])
+                    await page.wait_for_timeout(2500)
+
+                logger.info(
+                    "location=%s captured=%s (+%s)",
+                    location or "default",
+                    len(captured),
+                    len(captured) - before,
+                )
+                # Stop early once we have a decent set.
+                if len({c.get("jobId") for c in captured if c.get("jobId")}) >= 8:
+                    break
 
         except PlaywrightTimeoutError as exc:
             raise RuntimeError(f"Timed out loading Jobs at Amazon: {exc}") from exc
