@@ -1,0 +1,78 @@
+{
+  "updated_at": "2026-09-15T18:53:09Z",
+  "hits": 2,
+  "query": "Warehouse Operative",
+  "source": "jobsatamazon.co.uk",
+  "jobs": [
+    {
+      "id": "JOB-UK-0000000126",
+      "title": "Warehouse Operative",
+      "location": "Exeter/Plymouth Area",
+      "city": "",
+      "state": "",
+      "country_code": "GBR",
+      "company": "Amazon",
+      "category": "Warehouse Operative",
+      "family": "Reduced Time",
+      "business_category": "fulfillment-operations",
+      "schedule": "Seasonal",
+      "posted_date": "",
+      "updated_time": "",
+      "pay": "£14.30",
+      "schedule_count": 4,
+      "postal_code": "",
+      "description_short": "Exeter/Plymouth Area · Seasonal · £14.30",
+      "description": "Pick, pack and ship parcels",
+      "basic_qualifications": "No previous experience required. On-the-job training provided.",
+      "preferred_qualifications": "",
+      "url": "https://www.jobsatamazon.co.uk/jobDetail/en-GB/Warehouse-Operative/Exeter-Plymouth-Area/JOB-UK-0000000126#/jobDetail?jobId=JOB-UK-0000000126&locale=en-GB",
+      "apply_url": "https://www.jobsatamazon.co.uk/app#/jobDetail?jobId=JOB-UK-0000000126&locale=en-GB",
+      "is_intern": false,
+      "is_manager": false,
+      "locations": [],
+      "featured": false
+    },
+    {
+      "id": "JOB-UK-0000000132",
+      "title": "Warehouse Operative",
+      "location": "Carlisle, England",
+      "city": "Carlisle",
+      "state": "England",
+      "country_code": "GBR",
+      "company": "Amazon",
+      "category": "Warehouse Operative",
+      "family": "Reduced Time",
+      "business_category": "fulfillment-operations",
+      "schedule": "Seasonal",
+      "posted_date": "",
+      "updated_time": "",
+      "pay": "£14.30",
+      "schedule_count": 1,
+      "postal_code": "CA6 5TR",
+      "description_short": "Carlisle, England · Seasonal · £14.30",
+      "description": "Pick, pack and ship parcels",
+      "basic_qualifications": "No previous experience required. On-the-job training provided.",
+      "preferred_qualifications": "",
+      "url": "https://www.jobsatamazon.co.uk/jobDetail/en-GB/Warehouse-Operative/Carlisle/JOB-UK-0000000132#/jobDetail?jobId=JOB-UK-0000000132&locale=en-GB",
+      "apply_url": "https://www.jobsatamazon.co.uk/app#/jobDetail?jobId=JOB-UK-0000000132&locale=en-GB",
+      "is_intern": false,
+      "is_manager": false,
+      "locations": [],
+      "featured": false
+    }
+  ],
+  "facets": {
+    "categories": {
+      "Warehouse Operative": 2
+    },
+    "cities": {
+      "Carlisle": 1
+    },
+    "businesses": {
+      "fulfillment-operations": 2
+    },
+    "schedules": {
+      "Seasonal": 2
+    }
+  }
+}
