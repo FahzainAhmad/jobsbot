@@ -150,13 +150,18 @@ async def _set_location(page, city: Optional[str]) -> None:
     if not await fields.count():
         return
     field = fields.first
-    await field.click()
+    try:
+        await field.click(timeout=5000, force=True)
+    except Exception:  # noqa: BLE001
+        await field.focus()
     await field.fill(query)
     await page.wait_for_timeout(1200)
-    # Pick first autocomplete suggestion when available.
     options = page.locator('[role="option"]')
     if await options.count():
-        await options.first.click()
+        try:
+            await options.first.click(timeout=3000, force=True)
+        except Exception:  # noqa: BLE001
+            await field.press("Enter")
     else:
         await field.press("Enter")
     await page.wait_for_timeout(800)
@@ -241,14 +246,23 @@ async def _fetch_via_browser(
 
             for location in locations:
                 before = len(captured)
-                if location:
-                    await _set_location(page, location)
-                    await page.wait_for_timeout(3500)
-                    await _expand_filters(page)
-                    await page.wait_for_timeout(2500)
-                else:
-                    await _click_first(page, ["Close guided search", "Skip", "Close"])
-                    await page.wait_for_timeout(2500)
+                try:
+                    if location:
+                        await _set_location(page, location)
+                        await page.wait_for_timeout(3500)
+                        await _expand_filters(page)
+                        await page.wait_for_timeout(2500)
+                    else:
+                        await _click_first(page, ["Close guided search", "Skip", "Close"])
+                        await page.wait_for_timeout(2500)
+                except Exception as exc:  # noqa: BLE001
+                    logger.warning("location=%s failed: %s", location or "default", exc)
+                    await _click_first(
+                        page,
+                        ["Close guided search", "Close dialog", "Close", "Skip", "Continue without accepting"],
+                    )
+                    await page.wait_for_timeout(1000)
+                    continue
 
                 logger.info(
                     "location=%s captured=%s (+%s)",
