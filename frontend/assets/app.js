@@ -163,25 +163,36 @@ async function loadLiveApi() {
   state.mode = "live";
 }
 
-async function fetchJobs() {
-  setLoading(true);
-  els.statusLine.textContent =
-    state.mode === "live" ? "Scraping Warehouse Operative openings" : "Loading Warehouse Operative openings";
+async function fetchJobs({ silent = false } = {}) {
+  if (!silent) {
+    setLoading(true);
+    els.statusLine.textContent =
+      state.mode === "live" ? "Scraping Warehouse Operative openings" : "Loading Warehouse Operative openings";
+  }
 
   try {
     try {
       await loadStaticDataset();
-    } catch {
+    } catch (staticErr) {
+      // On GitHub Pages there is no API — don't hammer a missing backend.
+      if (location.hostname.endsWith("github.io")) {
+        throw staticErr;
+      }
       await loadLiveApi();
     }
     renderFromCache();
   } catch (err) {
+    if (silent && state.allJobs.length) {
+      // Keep showing the last good data during background polls.
+      els.lastUpdated.textContent = "Refresh failed — retrying";
+      return;
+    }
     els.jobList.innerHTML = `<div class="error-state">${escapeHtml(err.message)}</div>`;
     els.statusLine.textContent = "Load failed";
     els.lastUpdated.textContent = "Error";
     clearDetail();
   } finally {
-    setLoading(false);
+    if (!silent) setLoading(false);
   }
 }
 
@@ -303,3 +314,7 @@ els.nextBtn.addEventListener("click", () => {
 });
 
 fetchJobs();
+setInterval(() => {
+  if (state.loading) return;
+  fetchJobs({ silent: true });
+}, 5000);
